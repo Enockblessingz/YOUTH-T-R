@@ -254,17 +254,10 @@ tailwind.config = { theme: { extend: {
 </footer>
 
 <!-- SCRIPTS -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="module" src="/auth.js"></script>
 
 <script>
-  window.__YT_SUPABASE_URL__      = 'https://ewbtfjuzqqqzagpnfvkt.supabase.co';
-  window.__YT_SUPABASE_ANON_KEY__ = 'sb_publishable_-wmQrDmVZlNV78pOlQXx0A_PG40cX_O';
-</script>
-
-<script src="/auth.js"></script>
-
-<script>
-(function () {
+window.addEventListener('load', function () {
   'use strict';
 
   document.getElementById('footerYear').textContent = new Date().getFullYear();
@@ -328,12 +321,12 @@ tailwind.config = { theme: { extend: {
   /* ═══════════ SKIP IF ALREADY SIGNED IN ═══════════ */
   (async () => {
     try {
-      const session = await YT.getSession();
-      if (session) window.location.replace('/app.html');
+      const hasSession = await YT.hasActiveSession();
+      if (hasSession) window.location.replace('/app.html');
     } catch (_) { /* not signed in */ }
   })();
 
-  /* ═══════════ OAUTH ═══════════ */
+  /* ═══════════ OAUTH (Firebase) ═══════════ */
   async function signInWithProvider(provider, btn) {
     hideAlert();
     const providerName = provider === 'google' ? 'Google' : 'Apple';
@@ -347,36 +340,30 @@ tailwind.config = { theme: { extend: {
       </span>`;
 
     try {
-      const { error } = await YT.sb.auth.signInWithOAuth({
-        provider,
-        options: {
-          // `onboarding=1` lets /app.html route OAuth users who have no
-          // ministry profile yet into the onboarding flow.
-          redirectTo: window.location.origin + '/app.html?onboarding=1',
-          queryParams: provider === 'google' ? { prompt: 'select_account' } : {}
-        }
-      });
-      if (error) throw error;
-
-      // If the browser doesn't navigate (popup blocker, third-party cookie
-      // restrictions), reset the button so the user isn't stuck forever.
-      window.setTimeout(() => {
-        if (document.visibilityState !== 'hidden' && btn.isConnected) {
-          btn.disabled = false;
-          btn.querySelector('[data-label]').textContent = originalLabel;
-          showAlert('error', `${providerName} sign-in did not open. Please allow popups or try again.`);
-        }
-      }, 4000);
-
+      if (provider === 'google') {
+        await YT.signInWithGoogle();
+      } else {
+        await YT.signInWithApple();
+      }
+      // Success — Firebase popup completed
+      window.location.replace('/app.html');
     } catch (err) {
       console.error(`[oauth:${provider}]`, err);
-      const msg = err?.message || '';
+      const code = err?.code || '';
       let friendly = `Could not continue with ${providerName}. Please try again.`;
-      if (/provider is not enabled/i.test(msg)) {
+
+      if (code === 'OAUTH_CANCELLED' || /popup-closed-by-user/i.test(err?.message || '')) {
+        friendly = `${providerName} sign-in was cancelled.`;
+      } else if (code === 'auth/operation-not-allowed' || /not enabled/i.test(err?.message || '')) {
         friendly = `${providerName} sign-in is not enabled. Contact your ministry administrator.`;
-      } else if (/invalid.*client/i.test(msg)) {
-        friendly = `${providerName} sign-in is misconfigured. Please use email instead.`;
+      } else if (code === 'auth/unauthorized-domain') {
+        friendly = `This domain is not authorized for ${providerName} sign-in. Contact support.`;
+      } else if (code === 'auth/popup-blocked') {
+        friendly = `Your browser blocked the ${providerName} popup. Please allow popups and try again.`;
+      } else if (err?.detail) {
+        friendly = `${providerName} sign-in failed: ${err.detail}`;
       }
+
       showAlert('error', friendly);
       btn.disabled = false;
       btn.querySelector('[data-label]').textContent = originalLabel;
@@ -386,7 +373,6 @@ tailwind.config = { theme: { extend: {
   appleBtn.addEventListener('click', () => signInWithProvider('apple', appleBtn));
 
   /* ═══════════ EMAIL SIGN-IN ═══════════ */
-  // Friendly messages for every code auth.js can throw.
   const FRIENDLY = {
     INVALID_CREDENTIALS:     'Invalid email or password.',
     EMAIL_NOT_CONFIRMED:     'Please confirm your email before signing in.',
@@ -405,14 +391,18 @@ tailwind.config = { theme: { extend: {
     ACCOUNT_PENDING:         'Your account is awaiting approval by your ministry administrator.',
 
     RLS_DENIED:              'Access denied. Your account may not be fully set up yet. Contact your administrator.',
-    SCHEMA_MISSING_TABLE:    'Server configuration error (missing table). Contact support.',
-    SCHEMA_MISSING_COLUMN:   'Server configuration error (missing column). Contact support.',
+    SCHEMA_MISSING_TABLE:    'Server configuration error (missing collection). Contact support.',
+    SCHEMA_MISSING_COLUMN:   'Server configuration error (missing field). Contact support.',
 
     ORG_FETCH_FAILED:        'Could not load your ministry. Please contact your administrator.',
     SERVER_ERROR:            'Server error. Please try again in a moment.',
 
+    OAUTH_CANCELLED:         'Sign-in was cancelled.',
+    OAUTH_FAILED:            'Sign-in failed. Please try again.',
+
     MISSING_CREDENTIALS:     'Enter your email and password.',
     AUTH_SDK_UNAVAILABLE:    'Sign-in is temporarily unavailable. Refresh the page and try again.',
+    AUTH_ERROR:              'Sign-in failed. Please check your credentials.',
     UNKNOWN:                 'Unable to sign in. Please try again.'
   };
 
@@ -422,7 +412,6 @@ tailwind.config = { theme: { extend: {
     setFieldError('email', '');
     setFieldError('password', '');
 
-    // Use FormData — avoids the HTMLFormElement named-property gotcha.
     const fd = new FormData(form);
     const email    = String(fd.get('email')    || '').trim();
     const password = String(fd.get('password') || '');
@@ -438,7 +427,6 @@ tailwind.config = { theme: { extend: {
       await YT.signIn(email, password);
       window.location.replace('/app.html');
     } catch (err) {
-      // Full diagnostic dump — nothing hidden in DevTools.
       console.error('[login] code:',   err?.code);
       console.error('[login] detail:', err?.detail);
       console.error('[login] cause:',  err?.cause);
@@ -447,15 +435,13 @@ tailwind.config = { theme: { extend: {
       const code   = err?.code || '';
       const detail = err?.detail || err?.message || '';
 
-      // Known code → friendly. Anything else → show the real detail so it
-      // never falls through to the useless generic message.
       const msg = FRIENDLY[code] || (detail ? 'Sign-in failed: ' + detail : FRIENDLY.UNKNOWN);
       showAlert('error', msg);
     } finally {
       setLoading(false);
     }
   });
-})();
+});
 </script>
 </body>
 </html>
