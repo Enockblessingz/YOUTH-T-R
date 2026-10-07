@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Youth Transformers — Ministry Operations Platform</title>
+<meta name="description" content="One platform to run the entire ministry — people, departments, discipleship, care, events, finances, projects, communication, and reporting." />
+<meta name="theme-color" content="#4f46e5" />
+<link rel="manifest" href="/manifest.json" />
+<link rel="icon" type="image/png" href="/logo.png" />
+<link rel="apple-touch-icon" href="/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/iconify-icon@2.3.0/dist/iconify-icon.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = { theme: { extend: {
+  fontFamily: { sans: ['"Plus Jakarta Sans"','system-ui','sans-serif'] },
+  colors: { brand: { 50:'#eef2ff',100:'#e0e7ff',200:'#c7d2fe',300:'#a5b4fc',400:'#818cf8',500:'#6366f1',600:'#4f46e5',700:'#4338ca',800:'#3730a3',900:'#312e81' }, ink:'#0a0b1e' }
+} } }
+</script>
+<style>
+  html { scroll-behavior: smooth; -webkit-text-size-adjust:100%; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body { font-family:'Plus Jakarta Sans',system-ui,sans-serif; }
+  .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
+  .skip-link { position:absolute; left:-9999px; top:0; z-index:100; }
+  .skip-link:focus { left:1rem; top:1rem; padding:.75rem 1rem; background:#4f46e5; color:#fff; border-radius:.5rem; }
+  *:focus-visible { outline:2px solid #4f46e5; outline-offset:2px; border-radius:4px; }
+  @media (prefers-reduced-motion: reduce) { * { animation-duration:.001ms !important; transition-duration:.001ms !important; } }
+  iconify-icon { display:inline-block; vertical-align:middle; }
+
+  /* ═══════════ HERO BACKGROUND — image only, no overlay ═══════════ */
+  .hero-bg {
+    background-image: url('/Night%20Prayer.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #0a0b1e;
+  }
+
+  /* ═══════════ VIEW SWITCHING ═══════════ */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ═══════════ LEGAL VIEW ═══════════ */
+  #legal-view { background:#fff; }
+  .legal-hero { background:#f8fafc; border-bottom:1px solid #e2e8f0; }
+  .legal-layout-grid { grid-template-columns: 240px 1fr; }
+  .legal-sidebar-sticky { position: sticky; top: 96px; }
+
+  .legal-nav-link {
+    display:flex; align-items:center; gap:10px;
+    padding:9px 12px; border-radius:6px;
+    font-size:.85rem; color:#475569; font-weight:500;
+    cursor:pointer; transition:all .15s ease;
+    text-decoration:none;
+  }
+  .legal-nav-link:hover { background:#f8fafc; color:#0a0b1e; }
+  .legal-nav-link.active { background:#eef2ff; color:#4338ca; font-weight:700; }
+  .legal-nav-link iconify-icon { font-size:1.05rem; flex-shrink:0; width:18px; height:18px; }
+
+  .legal-section { display:none; animation: fadeIn .22s ease; }
+  .legal-section.active { display:block; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:translateY(0); } }
+
+  .legal-section h3 { font-weight:700; font-size:1.05rem; margin-top:32px; margin-bottom:10px; color:#0a0b1e; letter-spacing:-0.15px; }
+  .legal-section h3:first-of-type { margin-top:0; }
+  .legal-section p { color:#374151; font-size:.9375rem; margin-bottom:14px; line-height:1.75; }
+  .legal-section ul { padding-left:22px; margin-bottom:16px; color:#374151; font-size:.9375rem; line-height:1.75; list-style:disc; }
+  .legal-section ul li { margin-bottom:8px; }
+  .legal-section ul li strong, .legal-section p strong { color:#0a0b1e; font-weight:700; }
+  .legal-section a { color:#4f46e5; font-weight:600; text-decoration:none; }
+  .legal-section a:hover { color:#4338ca; text-decoration:underline; }
+  .legal-section code { background:#f1f5f9; padding:2px 6px; border-radius:4px; font-size:.85rem; color:#4338ca; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+
+  .callout { border-radius:10px; padding:16px 20px; margin:20px 0; display:flex; gap:12px; align-items:flex-start; font-size:.9rem; line-height:1.65; }
+  .callout iconify-icon { flex-shrink:0; font-size:1.25rem; margin-top:2px; }
+  .callout-info { background:#eff6ff; border:1px solid #bfdbfe; color:#1e3a8a; }
+  .callout-info iconify-icon { color:#2563eb; }
+  .callout-warn { background:#fffbeb; border:1px solid #fde68a; color:#78350f; }
+  .callout-warn iconify-icon { color:#d97706; }
+  .callout-success { background:#ecfdf5; border:1px solid #a7f3d0; color:#065f46; }
+  .callout-success iconify-icon { color:#059669; }
+  .callout a { color:#4f46e5; font-weight:600; }
+
+  @media print {
+    header, footer, aside, .no-print { display:none !important; }
+    main { padding:0 !important; max-width:100% !important; }
+    body { font-size:11pt; }
+    .view { display:none !important; }
+    #legal-view.view.active { display:block !important; }
+    .legal-layout-grid { display:block !important; }
+    .legal-section { display:none !important; }
+    .legal-section.active { display:block !important; }
+  }
+
+  @media (max-width: 1023px) {
+    .legal-layout-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+    .legal-sidebar-sticky { position: static !important; padding: 12px !important; }
+    .legal-sidebar-list { flex-direction: row !important; overflow-x: auto; gap: 4px !important; padding-bottom: 4px; }
+    .legal-nav-link { white-space: nowrap; font-size: .8rem; padding: 8px 12px; flex-shrink: 0; }
+    .legal-sidebar-title { display: none; }
+  }
+</style>
+</head>
+<body class="bg-white text-ink antialiased">
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header class="sticky top-0 z-50 bg-white/85 backdrop-blur border-b border-slate-200 no-print">
+  <div class="max-w-7xl mx-auto px-5 h-16 flex items-center justify-between">
+    <a href="#top" onclick="showView(event,'landing')" class="flex items-center gap-2.5 cursor-pointer">
+      <img src="/logo.png" alt="Youth Transformers" width="40" height="40" class="h-10 w-auto" />
+      <div class="flex flex-col leading-tight">
+        <span class="font-extrabold tracking-tight text-[17px] text-ink">
+          Youth <span class="text-brand-600">Transformers</span>
+        </span>
+        <span class="text-[10px] text-slate-500 font-medium italic">
+          Transformed To Transform!
+        </span>
+      </div>
+    </a>
+    <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600" aria-label="Primary">
+      <a href="#platform" onclick="showView(event,'landing','platform')" class="hover:text-brand-600 transition cursor-pointer">Platform</a>
+      <a href="#modules"  onclick="showView(event,'landing','modules')"  class="hover:text-brand-600 transition cursor-pointer">Modules</a>
+      <a href="#security" onclick="showView(event,'landing','security')" class="hover:text-brand-600 transition cursor-pointer">Security</a>
+      <a href="#roles"    onclick="showView(event,'landing','roles')"    class="hover:text-brand-600 transition cursor-pointer">Roles</a>
+    </nav>
+    <div class="flex items-center gap-3">
+      <a href="/login.html"  class="text-sm font-semibold text-slate-700 hover:text-brand-600 px-3 py-2 transition">Sign in</a>
+      <a href="/signup.html" class="text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 px-4 py-2.5 rounded-lg shadow-sm transition">Get started</a>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════ MAIN — single main element; view switching inside ═══════════ -->
+<main id="main" tabindex="-1" class="focus:outline-none">
+
+<!-- ──────── LANDING VIEW ──────── -->
+<div id="landing-view" class="view active">
+
+<!-- HERO -->
+<section id="hero" class="relative overflow-hidden hero-bg">
+  <div class="relative max-w-7xl mx-auto px-5 pt-24 pb-20 md:pt-32 md:pb-28">
+    <div class="max-w-3xl">
+      <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white bg-white/10 border border-white/20 px-3 py-1.5 rounded-full backdrop-blur">
+        <span class="material-symbols-outlined text-[15px]">verified</span> Ministry Operations Platform
+      </span>
+      <h1 class="mt-6 text-4xl md:text-5xl lg:text-[3.4rem] font-extrabold leading-[1.08] tracking-tight text-white">
+        Run your entire ministry from <span class="text-brand-300">one platform</span>.
+      </h1>
+      <p class="mt-6 text-lg text-slate-200 leading-relaxed max-w-xl">
+        People, departments, discipleship, pastoral care, events, finances, projects, communication and reporting — unified, role-secured and built for churches and youth ministries.
+      </p>
+      <div class="mt-9 flex flex-wrap gap-3">
+        <a href="/signup.html" class="inline-flex items-center gap-2 bg-white text-brand-700 hover:bg-slate-100 font-semibold px-6 py-3.5 rounded-xl shadow-lg shadow-black/20 transition">
+          Create your ministry <span class="material-symbols-outlined text-[19px]">arrow_forward</span>
+        </a>
+        <a href="/login.html" class="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/25 hover:bg-white/20 text-white font-semibold px-6 py-3.5 rounded-xl transition">
+          Sign in
+        </a>
+      </div>
+      <div class="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-200">
+        <span class="inline-flex items-center gap-1.5"><span class="material-symbols-outlined text-[17px] text-emerald-400">check_circle</span> Row Level Security</span>
+        <span class="inline-flex items-center gap-1.5"><span class="material-symbols-outlined text-[17px] text-emerald-400">check_circle</span> 11 role types</span>
+        <span class="inline-flex items-center gap-1.5"><span class="material-symbols-outlined text-[17px] text-emerald-400">check_circle</span> English &amp; Kinyarwanda</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="platform" class="py-20 border-t border-slate-100">
+  <div class="max-w-7xl mx-auto px-5">
+    <div class="max-w-2xl">
+      <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">Built for how ministry actually works</h2>
+      <p class="mt-4 text-lg text-slate-600">Not a church website. Not a sermon app. A serious operations platform with infrastructure-grade architecture.</p>
+    </div>
+    <div class="mt-14 grid md:grid-cols-3 gap-6">
+      <div class="p-7 rounded-2xl border border-slate-200">
+        <span class="w-11 h-11 rounded-xl bg-brand-50 text-brand-600 grid place-items-center"><span class="material-symbols-outlined">shield_person</span></span>
+        <h3 class="mt-5 font-bold text-lg">Enforced at every layer</h3>
+        <p class="mt-2 text-slate-600 leading-relaxed">UI gating, application guards and Supabase Row Level Security on every table.</p>
+      </div>
+      <div class="p-7 rounded-2xl border border-slate-200">
+        <span class="w-11 h-11 rounded-xl bg-brand-50 text-brand-600 grid place-items-center"><span class="material-symbols-outlined">bolt</span></span>
+        <h3 class="mt-5 font-bold text-lg">Real-time by default</h3>
+        <p class="mt-2 text-slate-600 leading-relaxed">Members, events, tasks and messages stream live via Supabase Realtime.</p>
+      </div>
+      <div class="p-7 rounded-2xl border border-slate-200">
+        <span class="w-11 h-11 rounded-xl bg-brand-50 text-brand-600 grid place-items-center"><span class="material-symbols-outlined">devices</span></span>
+        <h3 class="mt-5 font-bold text-lg">Works everywhere</h3>
+        <p class="mt-2 text-slate-600 leading-relaxed">Installable PWA with offline shell, mobile bottom navigation and full responsiveness.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="modules" class="py-20 bg-slate-50 border-y border-slate-200">
+  <div class="max-w-7xl mx-auto px-5">
+    <div class="max-w-2xl">
+      <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">Eighteen integrated modules</h2>
+      <p class="mt-4 text-lg text-slate-600">Everything a ministry runs on, connected in one system of record.</p>
+    </div>
+    <div id="moduleGrid" class="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    <noscript>
+      <ul class="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 list-none p-0">
+        <li class="bg-white rounded-xl border border-slate-200 px-4 py-3.5 font-semibold text-sm">Members</li>
+        <li class="bg-white rounded-xl border border-slate-200 px-4 py-3.5 font-semibold text-sm">Departments</li>
+        <li class="bg-white rounded-xl border border-slate-200 px-4 py-3.5 font-semibold text-sm">Events</li>
+        <li class="bg-white rounded-xl border border-slate-200 px-4 py-3.5 font-semibold text-sm">Bible Studies</li>
+        <li class="bg-white rounded-xl border border-slate-200 px-4 py-3.5 font-semibold text-sm">Discipleship</li>
+        <li class="bg-white rounded-xl border border-slate-200 px-4 py-3.5 font-semibold text-sm">Pastoral Care</li>
+        <li class="bg-white rounded-xl border border-slate-200 px-4 py-3.5 font-semibold text-sm">Finance</li>
+        <li class="bg-white rounded-xl border border-slate-200 px-4 py-3.5 font-semibold text-sm">Projects</li>
+        <li class="bg-white rounded-xl border border-slate-200 px-4 py-3.5 font-semibold text-sm">Tasks</li>
+        <li class="bg-white rounded-xl border border-slate-200 px-4 py-3.5 font-semibold text-sm">Assets</li>
+        <li class="bg-white rounded-xl border border-slate-200 px-4 py-3.5 font-semibold text-sm">Committees</li>
+        <li class="bg-white rounded-xl border border-slate-200 px-4 py-3.5 font-semibold text-sm">Announcements</li>
+        <li class="bg-white rounded-xl border border-slate-200 px-4 py-3.5 font-semibold text-sm">Media &amp; Social</li>
+        <li class="bg-white rounded-xl border border-slate-200 px-4 py-3.5 font-semibold text-sm">Messages</li>
+        <li class="bg-white rounded-xl border border-slate-200 px-4 py-3.5 font-semibold text-sm">Reports</li>
+        <li class="bg-white rounded-xl border border-slate-200 px-4 py-3.5 font-semibold text-sm">Audit Logs</li>
+        <li class="bg-white rounded-xl border border-slate-200 px-4 py-3.5 font-semibold text-sm">Dashboard</li>
+        <li class="bg-white rounded-xl border border-slate-200 px-4 py-3.5 font-semibold text-sm">Settings</li>
+      </ul>
+    </noscript>
+  </div>
+</section>
+
+<section id="security" class="py-20 bg-ink text-white">
+  <div class="max-w-7xl mx-auto px-5 grid lg:grid-cols-2 gap-14 items-center">
+    <div>
+      <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">Confidential data stays confidential.</h2>
+      <p class="mt-5 text-slate-300 leading-relaxed">Pastoral care notes and financial records are restricted by dedicated RLS policies — not by hiding buttons.</p>
+    </div>
+    <div class="rounded-2xl bg-white/5 border border-white/10 p-6 font-mono text-[13px] leading-relaxed text-slate-300 overflow-x-auto">
+<pre class="whitespace-pre">create policy pastoral_cases_select
+on public.pastoral_cases
+for select to authenticated
+using (
+  org_id = public.current_org_id()
+  and public.current_role() in (
+    'pastor',
+    'discipleship_leader',
+    'ministry_admin',
+    'super_admin'
+  )
+);</pre>
+    </div>
+  </div>
+</section>
+
+<section id="roles" class="py-20">
+  <div class="max-w-7xl mx-auto px-5 grid lg:grid-cols-2 gap-14 items-start">
+    <div>
+      <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">Eleven roles. One source of truth.</h2>
+      <p class="mt-4 text-lg text-slate-600">Roles live in the <code class="text-sm bg-slate-100 px-1.5 py-0.5 rounded">profiles</code> table — never in user metadata, never client-settable.</p>
+    </div>
+    <div id="roleGrid" class="grid sm:grid-cols-2 gap-3"></div>
+    <noscript>
+      <ul class="grid sm:grid-cols-2 gap-3 list-none p-0 mt-4">
+        <li class="rounded-xl border border-slate-200 p-4 bg-white"><div class="font-bold text-sm text-brand-700">Super Admin</div><div class="text-xs text-slate-500 mt-1">Full system control</div></li>
+        <li class="rounded-xl border border-slate-200 p-4 bg-white"><div class="font-bold text-sm text-brand-700">Ministry Admin</div><div class="text-xs text-slate-500 mt-1">Organization owner</div></li>
+        <li class="rounded-xl border border-slate-200 p-4 bg-white"><div class="font-bold text-sm text-brand-700">Pastor</div><div class="text-xs text-slate-500 mt-1">Care &amp; discipleship</div></li>
+        <li class="rounded-xl border border-slate-200 p-4 bg-white"><div class="font-bold text-sm text-brand-700">Ministry Leader</div><div class="text-xs text-slate-500 mt-1">Assigned ministry teams</div></li>
+        <li class="rounded-xl border border-slate-200 p-4 bg-white"><div class="font-bold text-sm text-brand-700">Department Leader</div><div class="text-xs text-slate-500 mt-1">Single department ops</div></li>
+        <li class="rounded-xl border border-slate-200 p-4 bg-white"><div class="font-bold text-sm text-brand-700">Finance Officer</div><div class="text-xs text-slate-500 mt-1">Giving &amp; expenses</div></li>
+        <li class="rounded-xl border border-slate-200 p-4 bg-white"><div class="font-bold text-sm text-brand-700">Discipleship Leader</div><div class="text-xs text-slate-500 mt-1">Groups &amp; growth</div></li>
+        <li class="rounded-xl border border-slate-200 p-4 bg-white"><div class="font-bold text-sm text-brand-700">Media Officer</div><div class="text-xs text-slate-500 mt-1">Announcements &amp; content</div></li>
+        <li class="rounded-xl border border-slate-200 p-4 bg-white"><div class="font-bold text-sm text-brand-700">Committee Member</div><div class="text-xs text-slate-500 mt-1">Read-only committee</div></li>
+        <li class="rounded-xl border border-slate-200 p-4 bg-white"><div class="font-bold text-sm text-brand-700">Volunteer</div><div class="text-xs text-slate-500 mt-1">Assigned events &amp; tasks</div></li>
+        <li class="rounded-xl border border-slate-200 p-4 bg-white"><div class="font-bold text-sm text-brand-700">Member</div><div class="text-xs text-slate-500 mt-1">Personal profile</div></li>
+      </ul>
+    </noscript>
+  </div>
+</section>
+
+<section class="py-20 border-t border-slate-100">
+  <div class="max-w-4xl mx-auto px-5 text-center">
+    <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">Ready to run your ministry properly?</h2>
+    <p class="mt-4 text-lg text-slate-600">Create your ministry workspace in under a minute.</p>
+    <div class="mt-9 flex flex-wrap justify-center gap-3">
+      <a href="/signup.html" class="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-semibold px-7 py-4 rounded-xl shadow-sm transition">
+        Get started free <span class="material-symbols-outlined text-[19px]">arrow_forward</span>
+      </a>
+      <a href="/login.html" class="inline-flex items-center gap-2 bg-white border border-slate-300 hover:border-brand-400 text-slate-800 font-semibold px-7 py-4 rounded-xl transition">Sign in</a>
+    </div>
+  </div>
+</section>
+
+</div><!-- /#landing-view -->
+
+<!-- ──────── LEGAL VIEW ──────── -->
+<div id="legal-view" class="view">
+
+  <section class="legal-hero">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 py-16 sm:py-20">
+      <p class="text-[11px] font-extrabold uppercase tracking-[0.18em] text-brand-600 mb-4">Legal</p>
+      <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-ink leading-[1.05]">Legal &amp; Policies</h1>
+      <p class="mt-5 text-base sm:text-lg text-slate-600 max-w-2xl leading-relaxed">
+        Everything you need to know about using Youth Transformers — our terms, how we handle your data, and how to reach us.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-x-7 gap-y-2.5 text-sm text-slate-500">
+        <span class="inline-flex items-center gap-2">
+          <iconify-icon icon="material-symbols:calendar-today" width="18"></iconify-icon>
+          Last updated: 6 October 2026
+        </span>
+        <span class="inline-flex items-center gap-2">
+          <iconify-icon icon="material-symbols:shield" width="18"></iconify-icon>
+          Applies to youthtransformers.rw and all Youth Transformers services
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-5 sm:px-6 py-12 sm:py-16">
+    <div class="legal-layout-grid grid gap-12 lg:gap-16 xl:gap-24">
+
+      <aside class="no-print">
+        <div class="legal-sidebar-sticky border border-slate-200 rounded-xl bg-white p-5">
+          <h3 class="legal-sidebar-title text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-500 mb-3.5">Jump to policy</h3>
+          <ul id="legalNav" class="legal-sidebar-list flex flex-col gap-0.5">
+            <li><a href="#terms" class="legal-nav-link active" onclick="showLegalSection(event,'terms')"><iconify-icon icon="material-symbols:description-outline" width="18"></iconify-icon> Terms &amp; Conditions</a></li>
+            <li><a href="#privacy" class="legal-nav-link" onclick="showLegalSection(event,'privacy')"><iconify-icon icon="material-symbols:shield-outline" width="18"></iconify-icon> Privacy Policy</a></li>
+            <li><a href="#cookies" class="legal-nav-link" onclick="showLegalSection(event,'cookies')"><iconify-icon icon="material-symbols:cookie" width="18"></iconify-icon> Cookie Policy</a></li>
+            <li><a href="#acceptable-use" class="legal-nav-link" onclick="showLegalSection(event,'acceptable-use')"><iconify-icon icon="material-symbols:block" width="18"></iconify-icon> Acceptable Use</a></li>
+            <li><a href="#dpa" class="legal-nav-link" onclick="showLegalSection(event,'dpa')"><iconify-icon icon="material-symbols:database" width="18"></iconify-icon> Data Processing</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <div class="min-w-0 max-w-3xl">
+
+        <section class="legal-section active" id="terms">
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-ink mb-2">Terms &amp; Conditions</h2>
+          <p class="text-slate-500 text-sm mb-8 pb-6 border-b border-slate-200">By accessing or using Youth Transformers, you agree to be bound by these terms.</p>
+
+          <h3>1. Acceptance of Terms</h3>
+          <p>These Terms &amp; Conditions ("Terms") form a legally binding agreement between you ("User", "you") and Youth Transformers ("we", "us", "our") governing your access to and use of the Youth Transformers ministry operations platform, website, and related services (collectively, the "Service").</p>
+          <p>By registering an account, accessing, or using the Service, you confirm that you have read, understood, and agreed to these Terms. If you do not agree, you must not use the Service.</p>
+
+          <h3>2. User Responsibilities</h3>
+          <ul>
+            <li>Providing accurate, current, and complete information during registration.</li>
+            <li>Maintaining the confidentiality of your account credentials (email and password).</li>
+            <li>All activities that occur under your account, whether authorized by you or not.</li>
+            <li>Ensuring your use of the Service complies with all applicable laws and regulations.</li>
+            <li>Obtaining appropriate consent before storing information about individuals.</li>
+          </ul>
+
+          <h3>3. Ministry Accounts</h3>
+          <p>The first user of each ministry account is designated as the ministry administrator and is responsible for managing all other users, roles, and permissions within that ministry. Administrators may invite, approve, suspend, or remove other users, and accept responsibility for all activity within their ministry's workspace.</p>
+
+          <h3>4. Data Ownership</h3>
+          <p>Your ministry retains full ownership of all data you upload, submit, or create within the Service. We do not sell, share, or use your ministry data for any purpose other than providing the Service to you.</p>
+
+          <h3>5. Acceptable Use</h3>
+          <p>Your use of the Service is also governed by our Acceptable Use Policy. Prohibited activities include violating laws, attempting unauthorized access, interfering with the Service, uploading malicious code, and using the Service to harass or harm others.</p>
+
+          <h3>6. Privacy</h3>
+          <p>Your use of the Service is governed by our Privacy Policy, which describes how we collect, use, and protect your information. By using the Service, you consent to our privacy practices.</p>
+
+          <h3>7. Payment and Billing</h3>
+          <p>Certain features may require payment. All fees are stated in the applicable currency and are non-refundable except as required by law or as expressly stated. We reserve the right to change our fees with reasonable notice.</p>
+
+          <h3>8. Service Availability</h3>
+          <p>We strive to keep the Service available at all times but do not guarantee uninterrupted access. We may perform maintenance, updates, or modifications that temporarily affect availability. Scheduled maintenance will be communicated in advance when possible.</p>
+
+          <h3>9. Intellectual Property</h3>
+          <p>The Service, including its design, code, branding, and content (excluding your data), is owned by Youth Transformers and protected by copyright, trademark, and other intellectual property laws. You may not copy, modify, or distribute any part of the Service without our prior written consent.</p>
+
+          <h3>10. Termination</h3>
+          <p>We may suspend or terminate your access to the Service if you violate these Terms or engage in conduct that we determine, in our sole discretion, is harmful to the Service or other users. You may terminate your account at any time through your settings.</p>
+
+          <h3>11. Disclaimers</h3>
+          <p>The Service is provided "as is" and "as available" without warranties of any kind, whether express or implied. We disclaim all warranties, including merchantability, fitness for a particular purpose, and non-infringement.</p>
+
+          <h3>12. Limitation of Liability</h3>
+          <p>To the maximum extent permitted by law, Youth Transformers shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or relating to your use of the Service.</p>
+
+          <h3>13. Changes to These Terms</h3>
+          <p>We may update these Terms from time to time. Material changes will be communicated via email or in-app notification. Continued use of the Service after changes take effect constitutes acceptance of the updated Terms.</p>
+
+          <h3>14. Contact</h3>
+          <p>For questions about these Terms, contact us at <a href="mailto:legal@youthtransformers.rw">legal@youthtransformers.rw</a>.</p>
+
+          <div class="mt-10 pt-6 border-t border-slate-200 flex flex-wrap gap-3 no-print">
+            <button onclick="window.print()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold transition">
+              <iconify-icon icon="material-symbols:print" width="18"></iconify-icon> Print this policy
+            </button>
+            <a href="mailto:legal@youthtransformers.rw" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-slate-300 hover:border-brand-400 hover:text-brand-700 text-sm font-semibold text-slate-700 transition">
+              <iconify-icon icon="material-symbols:mail-outline" width="18"></iconify-icon> Email legal team
+            </a>
+          </div>
+        </section>
+
+        <section class="legal-section" id="privacy">
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-ink mb-2">Privacy Policy</h2>
+          <p class="text-slate-500 text-sm mb-8 pb-6 border-b border-slate-200">How Youth Transformers collects, uses, stores, and protects your personal data.</p>
+
+          <h3>1. Information We Collect</h3>
+          <p><strong>Account information.</strong> When you register a ministry or user account, we collect your name, email address, ministry name, and authentication credentials.</p>
+          <p><strong>Ministry data.</strong> Information entered by your ministry — members, events, finances, pastoral notes, and related records — is stored on your behalf. Your ministry is the data controller for this information.</p>
+          <p><strong>Usage information.</strong> We collect technical information such as IP address, browser type, device type, and general usage patterns to operate and improve the Service.</p>
+
+          <h3>2. How We Use Information</h3>
+          <ul>
+            <li>To provide, operate, and maintain the Service</li>
+            <li>To authenticate users and secure accounts</li>
+            <li>To send transactional emails (signup verification, password reset, invitations)</li>
+            <li>To communicate service updates and important notices</li>
+            <li>To detect, prevent, and address technical issues or abuse</li>
+            <li>To comply with legal obligations</li>
+          </ul>
+
+          <h3>3. Data Isolation and Security</h3>
+          <p>Each ministry's data is logically isolated using Row Level Security enforced at the database layer. Your ministry data is only accessible to users your ministry has authorized. We use industry-standard encryption in transit (HTTPS/TLS) and at rest.</p>
+
+          <h3>4. Data Sharing</h3>
+          <p>We do not sell your data. We do not share your ministry data with third parties except:</p>
+          <ul>
+            <li>With service providers who help us operate the platform (e.g., hosting, email delivery), bound by confidentiality obligations</li>
+            <li>When required by law, legal process, or valid government request</li>
+            <li>To protect the rights, property, or safety of Youth Transformers, our users, or the public</li>
+            <li>In connection with a merger, acquisition, or sale of assets, with notice to affected users</li>
+          </ul>
+
+          <h3>5. Data Retention</h3>
+          <p>We retain your data for as long as your ministry account is active. If your account is deleted, your data is removed from our active systems within 30 days, and from backups within 90 days.</p>
+
+          <h3>6. Your Rights</h3>
+          <p>Depending on your jurisdiction, you may have rights to access the personal information we hold about you, correct inaccurate information, request deletion of your information, export your data in a portable format, and object to or restrict certain processing. To exercise these rights, contact your ministry administrator or email us at <a href="mailto:privacy@youthtransformers.rw">privacy@youthtransformers.rw</a>.</p>
+
+          <h3>7. Children's Privacy</h3>
+          <p>The Service is designed for use by ministry staff and administrators. Information about minors may be stored by ministries for ministry purposes, subject to their own policies and applicable laws. We do not knowingly collect information from children under 13 without appropriate consent.</p>
+
+          <h3>8. International Data Transfers</h3>
+          <p>Your information may be transferred to and processed in countries outside your own. We take steps to ensure appropriate safeguards are in place for such transfers.</p>
+
+          <h3>9. Cookies</h3>
+          <p>We use essential cookies and local storage to maintain your session and preferences. See our Cookie Policy for details.</p>
+
+          <h3>10. Changes to This Policy</h3>
+          <p>We may update this Privacy Policy from time to time. Material changes will be communicated via email or in-app notification.</p>
+
+          <h3>11. Contact</h3>
+          <p>For privacy questions, contact us at <a href="mailto:privacy@youthtransformers.rw">privacy@youthtransformers.rw</a>.</p>
+
+          <div class="callout callout-success">
+            <iconify-icon icon="material-symbols:verified-user" width="22"></iconify-icon>
+            <div><strong>Request data deletion:</strong> Email <a href="mailto:privacy@youthtransformers.rw">privacy@youthtransformers.rw</a> with the subject "Data Deletion Request" from your registered email.</div>
+          </div>
+
+          <div class="mt-10 pt-6 border-t border-slate-200 flex flex-wrap gap-3 no-print">
+            <button onclick="window.print()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold transition">
+              <iconify-icon icon="material-symbols:print" width="18"></iconify-icon> Print this policy
+            </button>
+          </div>
+        </section>
+
+        <section class="legal-section" id="cookies">
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-ink mb-2">Cookie Policy</h2>
+          <p class="text-slate-500 text-sm mb-8 pb-6 border-b border-slate-200">How Youth Transformers uses cookies and similar tracking technologies.</p>
+
+          <h3>1. What Are Cookies</h3>
+          <p>Small text files stored on your device when you visit a website. They help the site remember your preferences and keep you signed in.</p>
+
+          <h3>2. Cookies We Use</h3>
+          <p><strong>Essential (always active)</strong> — required for login and core features.</p>
+          <ul>
+            <li><code>yt-auth-token</code> — maintains your login session.</li>
+            <li><code>yt_language</code> — remembers your language preference (EN/RW).</li>
+            <li><code>supabase-auth</code> — manages authentication tokens with our backend.</li>
+          </ul>
+          <p><strong>Preference (optional)</strong> — remember your settings.</p>
+          <ul>
+            <li><code>yt_theme</code> — dark/light mode preference.</li>
+            <li><code>yt_dashboard_layout</code> — dashboard customization.</li>
+          </ul>
+
+          <h3>3. What We Do NOT Use Cookies For</h3>
+          <ul>
+            <li><strong>No advertising cookies</strong> — we don't serve ads or track you across other sites.</li>
+            <li><strong>No analytics tracking</strong> — we don't share usage data with third-party analytics providers.</li>
+            <li><strong>No social media pixels</strong> — we don't track you via Facebook, Twitter, or similar.</li>
+            <li><strong>No fingerprinting</strong> — we don't use device fingerprinting techniques.</li>
+          </ul>
+
+          <h3>4. How to Manage Cookies</h3>
+          <ul>
+            <li><strong>Chrome:</strong> Settings → Privacy and security → Cookies.</li>
+            <li><strong>Firefox:</strong> Preferences → Privacy &amp; Security → Cookies.</li>
+            <li><strong>Safari:</strong> Preferences → Privacy → Cookies.</li>
+            <li><strong>Edge:</strong> Settings → Cookies and site permissions.</li>
+          </ul>
+          <div class="callout callout-warn">
+            <iconify-icon icon="material-symbols:warning" width="22"></iconify-icon>
+            <div><strong>Note:</strong> Blocking essential cookies will prevent you from logging in.</div>
+          </div>
+
+          <h3>5. Third-Party Cookies</h3>
+          <ul>
+            <li><strong>Supabase</strong> — authentication and data storage.</li>
+            <li><strong>Google Cloud</strong> — OAuth authentication (optional).</li>
+            <li><strong>Resend</strong> — transactional email delivery.</li>
+          </ul>
+
+          <h3>6. Updates to This Policy</h3>
+          <p>We may update this Cookie Policy from time to time to reflect changes in technology or legal requirements.</p>
+
+          <h3>7. Contact</h3>
+          <p>For questions about our use of cookies, contact us at <a href="mailto:privacy@youthtransformers.rw">privacy@youthtransformers.rw</a>.</p>
+
+          <div class="mt-10 pt-6 border-t border-slate-200 flex flex-wrap gap-3 no-print">
+            <button onclick="window.print()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold transition">
+              <iconify-icon icon="material-symbols:print" width="18"></iconify-icon> Print this policy
+            </button>
+          </div>
+        </section>
+
+        <section class="legal-section" id="acceptable-use">
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-ink mb-2">Acceptable Use Policy</h2>
+          <p class="text-slate-500 text-sm mb-8 pb-6 border-b border-slate-200">The rules that govern your use of Youth Transformers.</p>
+
+          <h3>1. Scope</h3>
+          <p>This AUP applies to all users of the Service, including ministry administrators, staff, volunteers, and members. It also applies to any content stored, transmitted, or displayed through the Service.</p>
+
+          <h3>2. Prohibited Uses</h3>
+          <p><strong>a. Violate laws or regulations.</strong> You may not break any applicable law, facilitate illegal activity, or violate privacy laws, data protection regulations, or confidentiality obligations.</p>
+          <p><strong>b. Harm others.</strong> You may not harass, threaten, abuse, or defame any person; share content that is hateful, discriminatory, or incites violence; distribute content that sexualizes minors in any way; or engage in doxxing, stalking, or unwanted contact.</p>
+          <p><strong>c. Compromise security.</strong> You may not attempt to access accounts or data that are not yours; probe, scan, or test the vulnerability of the Service without authorization; bypass authentication or rate limits; introduce malware; or interfere with the proper operation of the Service.</p>
+          <p><strong>d. Abuse the Service.</strong> You may not send spam or unsolicited bulk communications; use the Service as general-purpose file storage; resell or commercialize the Service without written permission; reverse-engineer the Service; or mine cryptocurrency.</p>
+
+          <h3>3. Content Standards</h3>
+          <ul>
+            <li>Be accurate and honest; don't impersonate others or misrepresent your affiliation.</li>
+            <li>Respect the privacy and rights of others.</li>
+            <li>Not infringe copyright, trademark, or other intellectual property.</li>
+            <li>Not contain confidential information you don't have permission to share.</li>
+          </ul>
+
+          <h3>4. Ministry Responsibilities</h3>
+          <ul>
+            <li>Ensuring its users comply with this AUP.</li>
+            <li>Obtaining appropriate consent before storing information about individuals.</li>
+            <li>Configuring access permissions appropriate to each user's role.</li>
+            <li>Managing sensitive information (such as pastoral care notes) responsibly.</li>
+          </ul>
+
+          <h3>5. Enforcement</h3>
+          <p>We reserve the right to investigate suspected violations, remove or disable access to content that violates this AUP, suspend or terminate accounts that violate this AUP, and cooperate with law enforcement investigations. We will attempt to give notice before taking action, except where immediate action is necessary to prevent harm.</p>
+
+          <h3>6. Reporting Violations</h3>
+          <p>If you become aware of any violation of this AUP, please report it immediately to <a href="mailto:abuse@youthtransformers.rw">abuse@youthtransformers.rw</a>. All reports will be treated confidentially.</p>
+
+          <h3>7. Changes to This Policy</h3>
+          <p>We may update this AUP from time to time. Continued use of the Service constitutes acceptance of the updated policy.</p>
+
+          <div class="mt-10 pt-6 border-t border-slate-200 flex flex-wrap gap-3 no-print">
+            <button onclick="window.print()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold transition">
+              <iconify-icon icon="material-symbols:print" width="18"></iconify-icon> Print this policy
+            </button>
+            <a href="mailto:abuse@youthtransformers.rw" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-slate-300 hover:border-rose-400 hover:text-rose-700 text-sm font-semibold text-slate-700 transition">
+              <iconify-icon icon="material-symbols:report" width="18"></iconify-icon> Report abuse
+            </a>
+          </div>
+        </section>
+
+        <section class="legal-section" id="dpa">
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-ink mb-2">Data Processing Agreement</h2>
+          <p class="text-slate-500 text-sm mb-8 pb-6 border-b border-slate-200">How we process personal data on behalf of your ministry.</p>
+
+          <p>This Data Processing Agreement ("DPA") forms part of the agreement between your ministry ("Data Controller") and Youth Transformers ("Data Processor") for the use of the Service. It governs the processing of personal data in accordance with applicable data protection laws.</p>
+
+          <h3>1. Definitions</h3>
+          <ul>
+            <li><strong>Personal Data</strong> — Any information relating to an identified or identifiable natural person.</li>
+            <li><strong>Processing</strong> — Any operation performed on Personal Data (collection, storage, use, disclosure, deletion, etc.).</li>
+            <li><strong>Data Subject</strong> — The individual whose Personal Data is being processed.</li>
+            <li><strong>Sub-processor</strong> — A third party engaged by Youth Transformers to process Personal Data on behalf of the Controller.</li>
+          </ul>
+
+          <h3>2. Roles and Responsibilities</h3>
+          <p><strong>Your ministry is the Data Controller.</strong> You determine what Personal Data is stored in the Service, how it is used, and who has access. You are responsible for ensuring you have a lawful basis for processing.</p>
+          <p><strong>Youth Transformers is the Data Processor.</strong> We process Personal Data only on your documented instructions, as necessary to provide the Service. We do not use your data for our own purposes.</p>
+
+          <h3>3. Scope of Processing</h3>
+          <ul>
+            <li>Storing and organizing member, staff, and ministry records you provide.</li>
+            <li>Enabling features such as events, tasks, finances, and pastoral care management.</li>
+            <li>Authenticating users and managing access permissions.</li>
+            <li>Providing technical support and troubleshooting.</li>
+            <li>Complying with legal obligations applicable to us as a processor.</li>
+          </ul>
+
+          <h3>4. Data Security</h3>
+          <p>We implement appropriate technical and organizational measures to protect Personal Data, including:</p>
+          <ul>
+            <li>Encryption in transit (HTTPS/TLS) and at rest.</li>
+            <li>Row Level Security enforced at the database layer, ensuring logical data isolation per organization.</li>
+            <li>Role-based access control for all user actions.</li>
+            <li>Immutable audit logs for all sensitive operations.</li>
+            <li>Regular security reviews and updates.</li>
+            <li>Employee confidentiality obligations.</li>
+          </ul>
+
+          <h3>5. Sub-processors</h3>
+          <p>We engage the following sub-processors to help deliver the Service:</p>
+          <ul>
+            <li><strong>Supabase</strong> — Database, authentication, and file storage (primary data store).</li>
+            <li><strong>Vercel</strong> — Website hosting and content delivery.</li>
+            <li><strong>Resend</strong> — Transactional email delivery.</li>
+            <li><strong>Google Cloud</strong> — OAuth authentication (optional).</li>
+          </ul>
+          <p>Each sub-processor is bound by contractual obligations that meet or exceed the protections in this DPA. We will notify you of any intended changes to our sub-processors so you have the opportunity to object.</p>
+
+          <h3>6. Data Subject Rights</h3>
+          <p>We will assist you in responding to Data Subject requests, including right of access (data export), right to rectification, right to erasure, right to restrict processing, and right to data portability. If you receive a request from a Data Subject, direct them to use in-app features where available, or contact us at <a href="mailto:dpo@youthtransformers.rw">dpo@youthtransformers.rw</a> for support.</p>
+
+          <h3>7. Data Retention and Deletion</h3>
+          <p>We retain Personal Data only for as long as your ministry account is active. Upon termination:</p>
+          <ul>
+            <li>You have 30 days to export your data in a portable format (CSV / JSON).</li>
+            <li>After 30 days, all Personal Data is permanently deleted from active systems.</li>
+            <li>Backup copies are purged within 90 days.</li>
+          </ul>
+
+          <h3>8. International Transfers</h3>
+          <p>Personal Data may be processed outside your jurisdiction by our sub-processors. We ensure appropriate safeguards, including Standard Contractual Clauses (SCCs) and equivalent mechanisms, are in place for such transfers.</p>
+
+          <h3>9. Data Breach Notification</h3>
+          <p>In the event of a Personal Data breach, we will notify you without undue delay and no later than 72 hours after becoming aware of the breach; provide information about the nature of the breach and the data affected; describe measures taken or proposed; and cooperate with your notification obligations to supervisory authorities and Data Subjects.</p>
+
+          <h3>10. Audit Rights</h3>
+          <p>You have the right to audit our compliance with this DPA, subject to reasonable notice and confidentiality. For routine audits, we may provide our latest security documentation instead of on-site inspection.</p>
+
+          <h3>11. Term and Termination</h3>
+          <p>This DPA remains in effect for as long as we process Personal Data on your behalf. Upon termination, our obligations regarding data return and deletion survive.</p>
+
+          <h3>12. Contact</h3>
+          <p>For DPA-related questions, contact our Data Protection Officer at <a href="mailto:dpo@youthtransformers.rw">dpo@youthtransformers.rw</a>.</p>
+
+          <div class="mt-10 pt-6 border-t border-slate-200 flex flex-wrap gap-3 no-print">
+            <button onclick="window.print()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold transition">
+              <iconify-icon icon="material-symbols:print" width="18"></iconify-icon> Print this policy
+            </button>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+</div><!-- /#legal-view -->
+
+</main>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="bg-ink text-slate-400 border-t border-white/5 no-print">
+  <div class="max-w-7xl mx-auto px-5 py-16">
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8">
+
+      <div class="lg:col-span-5">
+        <a href="#top" onclick="showView(event,'landing')" class="inline-flex items-center gap-3 group cursor-pointer">
+          <span class="inline-flex items-center justify-center bg-white rounded-xl p-2 group-hover:opacity-95 transition">
+            <img src="/logo.png" alt="Youth Transformers" width="36" height="36" class="h-9 w-auto" />
+          </span>
+          <div>
+            <div class="font-extrabold text-white text-[16px] leading-tight">
+              Youth <span class="text-brand-400">Transformers</span>
+            </div>
+            <div class="text-[11px] text-slate-500 font-medium tracking-wide italic">
+              Transformed To Transform!
+            </div>
+          </div>
+        </a>
+        <p class="mt-5 text-sm leading-relaxed text-slate-400 max-w-md">
+          One unified platform to run your entire ministry — people, departments, discipleship, pastoral care, events, finances, projects, communication and reporting. Built for churches and youth ministries with security at every layer.
+        </p>
+      </div>
+
+      <nav class="lg:col-span-2" aria-label="Legal">
+        <h2 class="text-white font-bold text-sm uppercase tracking-wider mb-5">Legal</h2>
+        <ul class="space-y-3 text-sm">
+          <li><a href="#terms" onclick="showView(event,'legal','terms')" class="hover:text-brand-400 transition cursor-pointer">Terms &amp; Conditions</a></li>
+          <li><a href="#privacy" onclick="showView(event,'legal','privacy')" class="hover:text-brand-400 transition cursor-pointer">Privacy Policy</a></li>
+          <li><a href="#cookies" onclick="showView(event,'legal','cookies')" class="hover:text-brand-400 transition cursor-pointer">Cookie Policy</a></li>
+          <li><a href="#acceptable-use" onclick="showView(event,'legal','acceptable-use')" class="hover:text-brand-400 transition cursor-pointer">Acceptable Use</a></li>
+          <li><a href="#dpa" onclick="showView(event,'legal','dpa')" class="hover:text-brand-400 transition cursor-pointer">Data Processing</a></li>
+        </ul>
+      </nav>
+
+      <div class="lg:col-span-2">
+        <h2 class="text-white font-bold text-sm uppercase tracking-wider mb-5">Support</h2>
+        <ul class="space-y-3 text-sm">
+          <li>
+            <a href="mailto:support@youthtransformers.rw" class="inline-flex items-center gap-2 hover:text-brand-400 transition">
+              <span class="material-symbols-outlined text-[18px] text-slate-500">mail</span>
+              Email support
+            </a>
+          </li>
+          <li>
+            <a href="https://wa.me/250790020086" target="_blank" rel="noopener" class="inline-flex items-center gap-2 hover:text-brand-400 transition">
+              <span class="material-symbols-outlined text-[18px] text-slate-500">chat</span>
+              WhatsApp
+            </a>
+          </li>
+          <li>
+            <a href="mailto:abuse@youthtransformers.rw" class="inline-flex items-center gap-2 hover:text-brand-400 transition">
+              <span class="material-symbols-outlined text-[18px] text-slate-500">report</span>
+              Report an issue
+            </a>
+          </li>
+          <li>
+            <a href="/help.html" class="inline-flex items-center gap-2 hover:text-brand-400 transition">
+              <span class="material-symbols-outlined text-[18px] text-slate-500">help</span>
+              Help center
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="lg:col-span-3">
+        <h2 class="text-white font-bold text-sm uppercase tracking-wider mb-5">Follow us</h2>
+        <div class="flex items-center gap-2.5 flex-wrap">
+          <a href="https://www.instagram.com/youthtransformers" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="w-10 h-10 rounded-xl bg-white/5 hover:bg-brand-600 grid place-items-center text-slate-400 hover:text-white transition">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <a href="https://www.linkedin.com/company/youth-transformers" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="w-10 h-10 rounded-xl bg-white/5 hover:bg-brand-600 grid place-items-center text-slate-400 hover:text-white transition">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.063 2.063 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+          <a href="https://x.com/ytransformers" target="_blank" rel="noopener noreferrer" aria-label="X" class="w-10 h-10 rounded-xl bg-white/5 hover:bg-brand-600 grid place-items-center text-slate-400 hover:text-white transition">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://www.youtube.com/@youthtransformers" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="w-10 h-10 rounded-xl bg-white/5 hover:bg-brand-600 grid place-items-center text-slate-400 hover:text-white transition">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a>
+          <a href="https://www.tiktok.com/@youthtransformers" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="w-10 h-10 rounded-xl bg-white/5 hover:bg-brand-600 grid place-items-center text-slate-400 hover:text-white transition">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+          </a>
+        </div>
+        <p class="mt-6 text-[12px] text-slate-500 leading-relaxed">
+          Follow for ministry tips, updates and community stories.
+        </p>
+      </div>
+    </div>
+
+    <div class="mt-12 pt-8 border-t border-white/5">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+        <p class="text-xs text-slate-500 text-center md:text-left">
+          &copy; <span id="year"></span> Youth Transformers. All rights reserved.
+        </p>
+        <p class="text-xs text-slate-500 text-center md:text-right">
+          Designed &amp; Powered by
+          <a href="https://wa.me/250790020086" target="_blank" rel="noopener"
+             class="font-semibold text-brand-400 hover:text-brand-300 transition">	___Enock's___blessingz___</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ═══════════ UTILITIES ═══════════ */
+  const HEADER_OFFSET = 64;
+  const prefersReducedMotion = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const scrollBehavior = prefersReducedMotion ? 'auto' : 'smooth';
+
+  function buildUrl(anchorId) {
+    // Preserve pathname + query string when writing the hash.
+    const base = window.location.pathname + window.location.search;
+    return anchorId ? base + '#' + anchorId : base;
+  }
+  function writeUrl(anchorId) {
+    if (history.replaceState) history.replaceState(null, '', buildUrl(anchorId));
+  }
+  function scrollToElement(el) {
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET;
+    window.scrollTo({ top: Math.max(0, top), behavior: scrollBehavior });
+  }
+
+  /* ═══════════ YEAR ═══════════ */
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* ═══════════ LANDING CONTENT — modules + roles grids ═══════════ */
+  const MODULES = [
+    ['group','Members'],['account_tree','Departments'],['event','Events'],['menu_book','Bible Studies'],
+    ['diversity_3','Discipleship'],['volunteer_activism','Pastoral Care'],['payments','Finance'],['rocket_launch','Projects'],
+    ['checklist','Tasks'],['inventory_2','Assets'],['groups','Committees'],['campaign','Announcements'],
+    ['photo_camera','Media & Social'],['forum','Messages'],['assessment','Reports'],['history','Audit Logs'],
+    ['insights','Dashboard'],['settings','Settings']
+  ];
+  const moduleGrid = document.getElementById('moduleGrid');
+  if (moduleGrid) {
+    moduleGrid.innerHTML = MODULES.map(([icon,label]) => `
+      <div class="flex items-center gap-3 bg-white rounded-xl border border-slate-200 px-4 py-3.5">
+        <span class="material-symbols-outlined text-brand-600 text-[20px]">${icon}</span>
+        <span class="font-semibold text-sm">${label}</span>
+      </div>`).join('');
+  }
+
+  const ROLES = [
+    ['Super Admin','Full system control'],['Ministry Admin','Organization owner'],['Pastor','Care & discipleship'],
+    ['Ministry Leader','Assigned ministry teams'],['Department Leader','Single department ops'],['Finance Officer','Giving & expenses'],
+    ['Discipleship Leader','Groups & growth'],['Media Officer','Announcements & content'],['Committee Member','Read-only committee'],
+    ['Volunteer','Assigned events & tasks'],['Member','Personal profile']
+  ];
+  const roleGrid = document.getElementById('roleGrid');
+  if (roleGrid) {
+    roleGrid.innerHTML = ROLES.map(([name,desc]) => `
+      <div class="rounded-xl border border-slate-200 p-4 bg-white">
+        <div class="font-bold text-sm text-brand-700">${name}</div>
+        <div class="text-xs text-slate-500 mt-1">${desc}</div>
+      </div>`).join('');
+  }
+
+  /* ═══════════ VIEW SWITCHING ═══════════ */
+  const LEGAL_SECTIONS = ['terms','privacy','cookies','acceptable-use','dpa'];
+  let currentView = 'landing';
+
+  function showView(event, viewName, anchorId) {
+    if (event && typeof event.preventDefault === 'function') event.preventDefault();
+
+    const target = document.getElementById(viewName + '-view');
+    if (!target) return;
+
+    const changed = currentView !== viewName;
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    target.classList.add('active');
+    currentView = viewName;
+
+    if (viewName === 'legal') {
+      showLegalSection(null, anchorId || 'terms', { skipHash: true, skipScroll: true });
+      writeUrl(anchorId || 'terms');
+      // Scroll to the top of the legal content column, not the whole page.
+      const heading = target.querySelector('.legal-section.active h2') ||
+                      target.querySelector('.legal-hero');
+      scrollToElement(heading);
+      if (changed) {
+        const mainEl = document.getElementById('main');
+        if (mainEl) mainEl.focus({ preventScroll: true });
+      }
+    } else {
+      writeUrl(anchorId);
+      if (anchorId) {
+        const el = document.getElementById(anchorId);
+        if (el) {
+          requestAnimationFrame(() => scrollToElement(el));
+        }
+      } else {
+        window.scrollTo({ top: 0, behavior: scrollBehavior });
+      }
+      if (changed) {
+        const mainEl = document.getElementById('main');
+        if (mainEl) mainEl.focus({ preventScroll: true });
+      }
+    }
+  }
+  window.showView = showView;
+
+  function showLegalSection(event, sectionId, opts) {
+    opts = opts || {};
+    if (event && typeof event.preventDefault === 'function') event.preventDefault();
+    if (!LEGAL_SECTIONS.includes(sectionId)) sectionId = 'terms';
+
+    document.querySelectorAll('.legal-section').forEach(s => s.classList.remove('active'));
+    const sec = document.getElementById(sectionId);
+    if (sec) sec.classList.add('active');
+
+    document.querySelectorAll('#legalNav .legal-nav-link').forEach(a => a.classList.remove('active'));
+    const activeLink = document.querySelector('#legalNav .legal-nav-link[href="#' + sectionId + '"]');
+    if (activeLink) activeLink.classList.add('active');
+
+    if (!opts.skipHash) writeUrl(sectionId);
+
+    if (!opts.skipScroll) {
+      // Scroll to the newly-revealed section's heading, offsetting the sticky header.
+      scrollToElement(sec);
+    }
+  }
+  window.showLegalSection = showLegalSection;
+
+  /* ═══════════ INITIAL HASH ROUTING ═══════════ */
+  (function initFromHash() {
+    const hash = window.location.hash.replace('#','');
+    if (!hash) return;
+    if (LEGAL_SECTIONS.includes(hash)) {
+      showView(null, 'legal', hash);
+    } else {
+      // Wait a tick so layout settles before measuring.
+      requestAnimationFrame(() => {
+        const el = document.getElementById(hash);
+        if (el) scrollToElement(el);
+      });
+    }
+  })();
+
+  /* ═══════════ HASH CHANGE ═══════════ */
+  window.addEventListener('hashchange', function () {
+    const hash = window.location.hash.replace('#','');
+
+    if (LEGAL_SECTIONS.includes(hash)) {
+      if (currentView !== 'legal') {
+        showView(null, 'legal', hash);
+      } else {
+        showLegalSection(null, hash, { skipHash: true });
+      }
+      return;
+    }
+
+    // Landing section anchors, or switching back from legal.
+    if (currentView === 'legal') {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      const landing = document.getElementById('landing-view');
+      if (landing) landing.classList.add('active');
+      currentView = 'landing';
+    }
+
+    if (hash) {
+      // Defer so the landing view is actually displayed before measuring.
+      requestAnimationFrame(() => {
+        const el = document.getElementById(hash);
+        if (el) scrollToElement(el);
+      });
+    }
+  });
+
+  /* ═══════════ SERVICE WORKER ═══════════ */
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js').catch(function () { /* silent */ });
+    });
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Scheduled maintenance — Youth Transformers</title>
+<meta name="theme-color" content="#4f46e5" />
+<meta name="robots" content="noindex,nofollow" />
+<link rel="icon" href="/icons/favicon-32.png" sizes="32x32" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = { theme: { extend: {
+  fontFamily: { sans: ['"Plus Jakarta Sans"','system-ui','sans-serif'] },
+  colors: { brand: { 50:'#eef2ff',100:'#e0e7ff',200:'#c7d2fe',300:'#a5b4fc',400:'#818cf8',500:'#6366f1',600:'#4f46e5',700:'#4338ca',800:'#3730a3',900:'#312e81' }, ink:'#0a0b1e' }
+} } }
+</script>
+<style>
+  body { font-family:'Plus Jakarta Sans',system-ui,sans-serif; }
+  .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
+  @media (prefers-reduced-motion: reduce) { * { animation-duration:.001ms !important; } }
+</style>
+</head>
+<body class="bg-ink text-white min-h-screen">
+
+<main class="min-h-screen grid place-items-center p-6 relative overflow-hidden">
+  <div class="absolute -top-32 -right-32 w-[28rem] h-[28rem] rounded-full bg-brand-600/20 blur-3xl"></div>
+  <div class="absolute -bottom-32 -left-32 w-[28rem] h-[28rem] rounded-full bg-accent-500/10 blur-3xl"></div>
+
+  <div class="relative max-w-xl text-center">
+    <a href="/" class="inline-flex items-center gap-2.5 mb-10">
+      <span class="w-11 h-11 rounded-xl bg-gradient-to-br from-brand-500 to-brand-800 grid place-items-center">
+        <span class="material-symbols-outlined text-white">auto_awesome</span>
+      </span>
+      <span class="font-extrabold text-[17px]">Youth Transformers</span>
+    </a>
+
+    <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-accent-400 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full">
+      <span class="material-symbols-outlined text-[15px]">engineering</span> Scheduled maintenance
+    </div>
+
+    <h1 class="mt-7 text-4xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+      We'll be right back.
+    </h1>
+    <p class="mt-5 text-slate-300 text-lg leading-relaxed">
+      Youth Transformers is being upgraded. Your data is safe — we're applying improvements to make the platform faster and more reliable.
+    </p>
+
+    <div class="mt-9 rounded-2xl bg-white/5 border border-white/10 p-6 text-left space-y-3.5 text-sm">
+      <div class="flex items-start gap-3">
+        <span class="material-symbols-outlined text-brand-400 text-[20px] mt-0.5">schedule</span>
+        <div><div class="font-semibold">Expected duration</div><div class="text-slate-400">Approximately 2 hours</div></div>
+      </div>
+      <div class="flex items-start gap-3">
+        <span class="material-symbols-outlined text-brand-400 text-[20px] mt-0.5">shield</span>
+        <div><div class="font-semibold">Your data</div><div class="text-slate-400">Remains encrypted and untouched</div></div>
+      </div>
+      <div class="flex items-start gap-3">
+        <span class="material-symbols-outlined text-brand-400 text-[20px] mt-0.5">support_agent</span>
+        <div><div class="font-semibold">Need help?</div><div class="text-slate-400">Contact your ministry administrator</div></div>
+      </div>
+    </div>
+
+    <button onclick="location.reload()" class="mt-8 inline-flex items-center gap-2 bg-white text-ink font-semibold px-6 py-3.5 rounded-xl hover:bg-slate-200 transition">
+      <span class="material-symbols-outlined text-[19px]">refresh</span> Retry now
+    </button>
+
+    <p class="mt-10 text-xs text-slate-500">&copy; <span id="year"></span> Youth Transformers. Ministry Operations Platform.</p>
+  </div>
+</main>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
