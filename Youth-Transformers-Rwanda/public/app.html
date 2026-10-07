@@ -205,11 +205,10 @@ tailwind.config = { theme: { extend: {
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  window.__YT_SUPABASE_URL__      = 'https://ewbtfjuzqqqzagpnfvkt.supabase.co';
-  window.__YT_SUPABASE_ANON_KEY__ = 'sb_publishable_-wmQrDmVZlNV78pOlQXx0A_PG40cX_O';
-</script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
 <script src="/auth.js"></script>
 
 <script>
@@ -462,10 +461,6 @@ function renderSidebar() {
   $('#orgLabel').textContent = STATE.org?.name || 'Ministry Operations';
   const ini = initials(p.full_name || p.email || 'O');
   const photoUrl = SCHEMA.avatarCol ? p[SCHEMA.avatarCol] : null;
-  // NOTE: the avatar container already has w-9/h-9 (sidebar) or w-10/h-10 (header).
-  // Adding w-full/h-full classes here would OVERRIDE those dimensions and stretch
-  // the avatar across its parent flex column — producing a giant photo. Only the
-  // inner <img> should be sized to fill the container.
   const setAvatar = (el) => {
     if (!el) return;
     if (photoUrl) {
@@ -925,8 +920,6 @@ async function uploadMemberPhoto(file) {
   return data.publicUrl;
 }
 
-// Dedicated uploader for the signed-in user's profile photo.
-// Reuses the shared 'media' storage bucket but stores under avatars/.
 async function uploadProfileAvatar(file) {
   if (typeof YT !== 'undefined' && typeof YT.uploadMedia === 'function') return await YT.uploadMedia(file, 'avatars');
   if (!SCHEMA.hasMediaBucket) throw new Error('media bucket missing');
