@@ -165,7 +165,7 @@ tailwind.config = { theme: { extend: {
         </a>
       </div>
       <div class="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-200">
-        <span class="inline-flex items-center gap-1.5"><span class="material-symbols-outlined text-[17px] text-emerald-400">check_circle</span> Row Level Security</span>
+        <span class="inline-flex items-center gap-1.5"><span class="material-symbols-outlined text-[17px] text-emerald-400">check_circle</span> Firebase Security Rules</span>
         <span class="inline-flex items-center gap-1.5"><span class="material-symbols-outlined text-[17px] text-emerald-400">check_circle</span> 11 role types</span>
         <span class="inline-flex items-center gap-1.5"><span class="material-symbols-outlined text-[17px] text-emerald-400">check_circle</span> English &amp; Kinyarwanda</span>
       </div>
@@ -183,12 +183,12 @@ tailwind.config = { theme: { extend: {
       <div class="p-7 rounded-2xl border border-slate-200">
         <span class="w-11 h-11 rounded-xl bg-brand-50 text-brand-600 grid place-items-center"><span class="material-symbols-outlined">shield_person</span></span>
         <h3 class="mt-5 font-bold text-lg">Enforced at every layer</h3>
-        <p class="mt-2 text-slate-600 leading-relaxed">UI gating, application guards and Supabase Row Level Security on every table.</p>
+        <p class="mt-2 text-slate-600 leading-relaxed">UI gating, application guards and Firebase Security Rules on every collection.</p>
       </div>
       <div class="p-7 rounded-2xl border border-slate-200">
         <span class="w-11 h-11 rounded-xl bg-brand-50 text-brand-600 grid place-items-center"><span class="material-symbols-outlined">bolt</span></span>
         <h3 class="mt-5 font-bold text-lg">Real-time by default</h3>
-        <p class="mt-2 text-slate-600 leading-relaxed">Members, events, tasks and messages stream live via Supabase Realtime.</p>
+        <p class="mt-2 text-slate-600 leading-relaxed">Members, events, tasks and messages stream live via Firestore real-time listeners.</p>
       </div>
       <div class="p-7 rounded-2xl border border-slate-200">
         <span class="w-11 h-11 rounded-xl bg-brand-50 text-brand-600 grid place-items-center"><span class="material-symbols-outlined">devices</span></span>
@@ -235,21 +235,20 @@ tailwind.config = { theme: { extend: {
   <div class="max-w-7xl mx-auto px-5 grid lg:grid-cols-2 gap-14 items-center">
     <div>
       <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">Confidential data stays confidential.</h2>
-      <p class="mt-5 text-slate-300 leading-relaxed">Pastoral care notes and financial records are restricted by dedicated RLS policies — not by hiding buttons.</p>
+      <p class="mt-5 text-slate-300 leading-relaxed">Pastoral care notes and financial records are restricted by dedicated Firestore Security Rules — not by hiding buttons.</p>
     </div>
     <div class="rounded-2xl bg-white/5 border border-white/10 p-6 font-mono text-[13px] leading-relaxed text-slate-300 overflow-x-auto">
-<pre class="whitespace-pre">create policy pastoral_cases_select
-on public.pastoral_cases
-for select to authenticated
-using (
-  org_id = public.current_org_id()
-  and public.current_role() in (
-    'pastor',
-    'discipleship_leader',
-    'ministry_admin',
-    'super_admin'
-  )
-);</pre>
+<pre class="whitespace-pre">rules_version = '2';
+service cloud.firestore {
+  match /databases/{db}/documents {
+    match /pastoral_cases/{caseId} {
+      allow read, write: if request.auth != null
+        &amp;&amp; request.auth.uid in get(
+             /databases/$(db)/documents/orgs/$(resource.data.org_id)
+           ).data.pastoral_team;
+    }
+  }
+}</pre>
     </div>
   </div>
 </section>
@@ -258,7 +257,7 @@ using (
   <div class="max-w-7xl mx-auto px-5 grid lg:grid-cols-2 gap-14 items-start">
     <div>
       <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">Eleven roles. One source of truth.</h2>
-      <p class="mt-4 text-lg text-slate-600">Roles live in the <code class="text-sm bg-slate-100 px-1.5 py-0.5 rounded">profiles</code> table — never in user metadata, never client-settable.</p>
+      <p class="mt-4 text-lg text-slate-600">Roles live in the <code class="text-sm bg-slate-100 px-1.5 py-0.5 rounded">profiles</code> collection — never in user metadata, never client-settable.</p>
     </div>
     <div id="roleGrid" class="grid sm:grid-cols-2 gap-3"></div>
     <noscript>
@@ -418,7 +417,7 @@ using (
           </ul>
 
           <h3>3. Data Isolation and Security</h3>
-          <p>Each ministry's data is logically isolated using Row Level Security enforced at the database layer. Your ministry data is only accessible to users your ministry has authorized. We use industry-standard encryption in transit (HTTPS/TLS) and at rest.</p>
+          <p>Each ministry's data is logically isolated using Firestore Security Rules enforced at the database layer. Your ministry data is only accessible to users your ministry has authorized. We use industry-standard encryption in transit (HTTPS/TLS) and at rest.</p>
 
           <h3>4. Data Sharing</h3>
           <p>We do not sell your data. We do not share your ministry data with third parties except:</p>
@@ -472,9 +471,8 @@ using (
           <h3>2. Cookies We Use</h3>
           <p><strong>Essential (always active)</strong> — required for login and core features.</p>
           <ul>
-            <li><code>yt-auth-token</code> — maintains your login session.</li>
+            <li><code>firebase-auth</code> — maintains your login session.</li>
             <li><code>yt_language</code> — remembers your language preference (EN/RW).</li>
-            <li><code>supabase-auth</code> — manages authentication tokens with our backend.</li>
           </ul>
           <p><strong>Preference (optional)</strong> — remember your settings.</p>
           <ul>
@@ -504,9 +502,9 @@ using (
 
           <h3>5. Third-Party Cookies</h3>
           <ul>
-            <li><strong>Supabase</strong> — authentication and data storage.</li>
+            <li><strong>Firebase (Google)</strong> — authentication, database, and file storage.</li>
+            <li><strong>Vercel</strong> — website hosting and content delivery.</li>
             <li><strong>Google Cloud</strong> — OAuth authentication (optional).</li>
-            <li><strong>Resend</strong> — transactional email delivery.</li>
           </ul>
 
           <h3>6. Updates to This Policy</h3>
@@ -601,7 +599,7 @@ using (
           <p>We implement appropriate technical and organizational measures to protect Personal Data, including:</p>
           <ul>
             <li>Encryption in transit (HTTPS/TLS) and at rest.</li>
-            <li>Row Level Security enforced at the database layer, ensuring logical data isolation per organization.</li>
+            <li>Firestore Security Rules enforced at the database layer, ensuring logical data isolation per organization.</li>
             <li>Role-based access control for all user actions.</li>
             <li>Immutable audit logs for all sensitive operations.</li>
             <li>Regular security reviews and updates.</li>
@@ -611,9 +609,8 @@ using (
           <h3>5. Sub-processors</h3>
           <p>We engage the following sub-processors to help deliver the Service:</p>
           <ul>
-            <li><strong>Supabase</strong> — Database, authentication, and file storage (primary data store).</li>
+            <li><strong>Firebase (Google Cloud)</strong> — Authentication, Firestore database, file storage, and cloud functions (primary data store).</li>
             <li><strong>Vercel</strong> — Website hosting and content delivery.</li>
-            <li><strong>Resend</strong> — Transactional email delivery.</li>
             <li><strong>Google Cloud</strong> — OAuth authentication (optional).</li>
           </ul>
           <p>Each sub-processor is bound by contractual obligations that meet or exceed the protections in this DPA. We will notify you of any intended changes to our sub-processors so you have the opportunity to object.</p>
@@ -775,7 +772,6 @@ using (
   const scrollBehavior = prefersReducedMotion ? 'auto' : 'smooth';
 
   function buildUrl(anchorId) {
-    // Preserve pathname + query string when writing the hash.
     const base = window.location.pathname + window.location.search;
     return anchorId ? base + '#' + anchorId : base;
   }
@@ -841,7 +837,6 @@ using (
     if (viewName === 'legal') {
       showLegalSection(null, anchorId || 'terms', { skipHash: true, skipScroll: true });
       writeUrl(anchorId || 'terms');
-      // Scroll to the top of the legal content column, not the whole page.
       const heading = target.querySelector('.legal-section.active h2') ||
                       target.querySelector('.legal-hero');
       scrollToElement(heading);
@@ -883,7 +878,6 @@ using (
     if (!opts.skipHash) writeUrl(sectionId);
 
     if (!opts.skipScroll) {
-      // Scroll to the newly-revealed section's heading, offsetting the sticky header.
       scrollToElement(sec);
     }
   }
@@ -896,7 +890,6 @@ using (
     if (LEGAL_SECTIONS.includes(hash)) {
       showView(null, 'legal', hash);
     } else {
-      // Wait a tick so layout settles before measuring.
       requestAnimationFrame(() => {
         const el = document.getElementById(hash);
         if (el) scrollToElement(el);
@@ -917,7 +910,6 @@ using (
       return;
     }
 
-    // Landing section anchors, or switching back from legal.
     if (currentView === 'legal') {
       document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
       const landing = document.getElementById('landing-view');
@@ -926,7 +918,6 @@ using (
     }
 
     if (hash) {
-      // Defer so the landing view is actually displayed before measuring.
       requestAnimationFrame(() => {
         const el = document.getElementById(hash);
         if (el) scrollToElement(el);
